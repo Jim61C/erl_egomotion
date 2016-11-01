@@ -230,14 +230,18 @@ classdef CostFunction
         % useGradientDescent - boolean, specifies whether to plot heading direction using estimate
         %                      gotten from gradient descent (slower, optional, default false)
         % nsamples - positive integer, specifies the courseness of the grid (optional, default 25)
-        function [min_value] = plotResidualsSurface(c,newFigure,useGradientDescent,nsamples)
+        % givenFigure - figure handler, if provided, draw on the
+        % givenFigure rather than create a new one
+        function [min_value] = plotResidualsSurface(c,newFigure,useGradientDescent,nsamples, givenFigure)
             if nargin < 2; newFigure = true; end
+            if newFigure; figure('units','pixels','position',[0 0 1001 1001]); end;
             if nargin < 3; useGradientDescent = false; end
             if nargin < 4; nsamples = 25; end
+            if nargin < 5; givenFigure = gcf; end
             
             [z,x,y] = c.getSurfaceResiduals(nsamples);
             % Plot the residuals
-            if newFigure; figure('units','pixels','position',[0 0 1001 1001]); end;
+            figure(givenFigure);
             hold on;
             surf(x,y,z)
             colormap('jet')

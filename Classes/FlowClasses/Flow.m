@@ -24,12 +24,16 @@ classdef Flow
     end
     
     methods
-        function plotFlow(flow,isOutlier,newFigure,scaleFlow)
+        function plotFlow(flow,isOutlier,newFigure,scaleFlow, givenFigure)
+            if nargin < 5
+                givenFigure = gcf;
+            end
             % Begin plot
             if newFigure; figure; end;
             % Get the flow points
             new_points = flow.xy_pixel + flow.uv_pixel;
             % Plot points (blue) and new points (green)
+            figure(givenFigure);
             hold on
             scatter(flow.xy_pixel(1,:),flow.xy_pixel(2,:),'b.')
             if ~isempty(isOutlier) % Circle the outliers of the points

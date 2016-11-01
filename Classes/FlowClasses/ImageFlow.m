@@ -64,7 +64,7 @@ classdef ImageFlow < Flow
             imgFlow.trueT = definedOrDefault('trueT',[0;0;0]);
             imgFlow.trueOmega = definedOrDefault('trueOmega',[0;0;0]);
         end
-        function plotFlow(imgFlow,isOutlier,newFigure)
+        function plotFlow(imgFlow,isOutlier,newFigure, givenFigure)
             if nargin < 2
                 isOutlier = [];
             end
@@ -72,11 +72,16 @@ classdef ImageFlow < Flow
                 newFigure = true;
             end
             if newFigure; figure; end;
+            % if no figure handle passed in, then just grab the gcf
+            if nargin < 4
+                givenFigure = gcf;
+            end
+            figure(givenFigure);
             if ~isempty(imgFlow.img0)
                 imshow(imgFlow.img0)
             end
             hold on;
-            plotFlow@Flow(imgFlow,isOutlier,false,false);
+            plotFlow@Flow(imgFlow,isOutlier,false,false, givenFigure);
             hold off;
         end
     end
