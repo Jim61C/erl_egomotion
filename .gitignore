@@ -1,4 +1,5 @@
 # for mac
 .DS_Store
 # exclude data files
-Data/
+Data/Video/
+Data/Sample/**/
