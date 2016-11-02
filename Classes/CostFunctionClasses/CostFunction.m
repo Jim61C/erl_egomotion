@@ -12,6 +12,8 @@ classdef CostFunction
         flow_outliers % Flow before outlier rejection (only used if outliers removed)
         inliers % Which flow vectors are inliers?
         verbose % Print out progress
+        guessedOmega % the best estimated omega, rotational velocity
+        guessedTranslation % the best estimated t, the translational velocity
     end
     
     methods
@@ -21,7 +23,10 @@ classdef CostFunction
             c.flow_outliers = flow;
             c.trueT = flow.trueT;
             c.verbose = true;
+            c.guessedOmega = NaN;
+            c.guessedTranslation = NaN;
         end
+        
         % Total residual of a translation in given heading direction
         % Inputs:
         % T - size (3 x 1), norm(T)==1
@@ -232,7 +237,7 @@ classdef CostFunction
         % nsamples - positive integer, specifies the courseness of the grid (optional, default 25)
         % givenFigure - figure handler, if provided, draw on the
         % givenFigure rather than create a new one
-        function [min_value] = plotResidualsSurface(c,newFigure,useGradientDescent,nsamples, givenFigure)
+        function [min_value, modified] = plotResidualsSurface(c,newFigure,useGradientDescent,nsamples, givenFigure)
             if nargin < 2; newFigure = true; end
             if newFigure; figure('units','pixels','position',[0 0 1001 1001]); end;
             if nargin < 3; useGradientDescent = false; end
@@ -257,12 +262,16 @@ classdef CostFunction
                          sqrt(1 - (x(t_min_guess)^2 + y(t_min_guess)^2))];
             scatter3(x(t_min_guess),y(t_min_guess),...
                 c.getResidual(guessedT),600,'k.');
+            c.guessedTranslation = guessedT;
             % Use gradient descent
             if useGradientDescent
                 finalT = c.gradientDescent(guessedT);
                 scatter3(finalT(1),finalT(2),...
                     c.getResidual(finalT),500,'c.');
             end
+            
+            % get the omega corresponding to the t with minimum sum residual
+            c.guessedOmega = c.getOmega(guessedT);
             xlabel('X')
             ylabel('Y')
             zlabel('Residual')
@@ -270,6 +279,8 @@ classdef CostFunction
             if nargout > 0
                 min_value = guessedT;
             end
+            
+            modified = c;
         end
 
         % Similar to plotResidualsSurface, except plots the resulting surface as a heatmap
