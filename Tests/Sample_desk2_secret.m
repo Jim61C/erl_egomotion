@@ -7,7 +7,6 @@ createFolderIfNotExist(strcat('Data/Sample/', sequence_name, '_residual'));
 
 f_flow = figure;
 f_residual = figure('units','pixels','position',[0 0 1001 1001]);
-
 frame_info = importdata('rgbd_dataset_freiburg1_desk2_secret.txt', ' ');
 
 start_frame_index = 4;

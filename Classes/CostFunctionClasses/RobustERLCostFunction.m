@@ -52,9 +52,9 @@ classdef RobustERLCostFunction < CostFunction
             AperpVT = sparse(j(:),i',A1(:));
             A = bsxfun(@times, AperpVT*c.B, c.weights);
             b = bsxfun(@times, AperpVT*c.u, c.weights);
-            G = (A'*A);
-            H = (A'*b);
-            Omega = (G\H);
+            % G = (A'*A);
+            % H = (A'*b);
+            Omega = (A'*A) \ (A'*b); %(G\H);
         end
         
         function [rho] = getInverseDepths(c,T,Omega)

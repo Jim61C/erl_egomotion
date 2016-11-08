@@ -256,20 +256,22 @@ classdef CostFunction
             [~,t_min_guess] = min(z(:));
 
             scatter3(c.trueT(1),c.trueT(2),...
-                c.getResidual(c.trueT),600,'g.');
+                c.getResidual(c.trueT),600,'k.');
             guessedT = [ x(t_min_guess);
                          y(t_min_guess);
                          sqrt(1 - (x(t_min_guess)^2 + y(t_min_guess)^2))];
             scatter3(x(t_min_guess),y(t_min_guess),...
-                c.getResidual(guessedT),600,'k.');
-            c.guessedTranslation = guessedT;
+                c.getResidual(guessedT),600,'g.');
+            
             % Use gradient descent
             if useGradientDescent
                 finalT = c.gradientDescent(guessedT);
                 scatter3(finalT(1),finalT(2),...
-                    c.getResidual(finalT),500,'c.');
+                    c.getResidual(finalT),500,'r.');
+                guessedT = finalT;
             end
             
+            c.guessedTranslation = guessedT;
             % get the omega corresponding to the t with minimum sum residual
             c.guessedOmega = c.getOmega(guessedT);
             xlabel('X')
