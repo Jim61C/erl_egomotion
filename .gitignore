@@ -2,4 +2,5 @@
 .DS_Store
 # exclude data files
 Data/Video/
-Data/Sample/**/
+Data/Sample/*
+!Data/Sample/Intrinsics/
