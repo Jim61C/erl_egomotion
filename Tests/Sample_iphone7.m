@@ -1,4 +1,4 @@
-function Sample_GOPR5738()
+function Sample_iphone7()
     close all;clc;clear
     % Example of how the classes typically work
     test_name = 'iphone7';
@@ -15,13 +15,15 @@ function Sample_GOPR5738()
     
     
     start_frame_index = 40;
-    final_frame_index = 100;
-    guessedTs = zeros(3, final_frame_index - start_frame_index);
-    guessedOmegas = zeros(3, final_frame_index - start_frame_index);
-    pos = zeros(3, final_frame_index - start_frame_index);
-
-    for i = start_frame_index+1:10: final_frame_index
-        Im1 = imread(sprintf('%s/%04d.png', input_path, i-10));
+    final_frame_index = 419;
+    step = 10;
+    N= int64((final_frame_index - start_frame_index)/step);
+    guessedTs = zeros(3, N);
+    guessedOmegas = zeros(3, N);
+    guessedRs = zeros(9, N);
+    pos = zeros(3, N);
+    for i = start_frame_index+step:step: final_frame_index
+        Im1 = imread(sprintf('%s/%04d.png', input_path, i-step));
         Im2 = imread(sprintf('%s/%04d.png', input_path, i));
         fprintf(sprintf('cur: %s/%04d.png\n', input_path, i));
         
@@ -66,27 +68,27 @@ function Sample_GOPR5738()
             Omega_final=[0;0;0];
         end
         R=estimateR(Omega_final);
-        current_pos=R*pos(:,i - start_frame_index)+c.guessedTranslation;
-        pos(:,i - start_frame_index+1)=current_pos;
+        ind=(i - start_frame_index)/step;
+        current_pos=pos(:,ind)+c.guessedTranslation;
+        pos(:,ind+1)=current_pos;
         
-        guessedTs(:,i- start_frame_index) = c.guessedTranslation;
-        guessedOmegas(:,i - start_frame_index) = c.guessedOmega;
+        guessedTs(:,ind) = c.guessedTranslation;
+        guessedRs(:, ind) = reshape(R, [1 9]);
+        guessedOmegas(:,ind) = c.guessedOmega;
         
         % Plot trajectory
         figure(f_trajectory);
-        plot3(pos(1,i - start_frame_index:i - start_frame_index+1),...
-            pos(2,i - start_frame_index:i - start_frame_index+1),...
-            pos(3,i - start_frame_index:i - start_frame_index+1),'-'),hold on,grid on,
+        plot3(pos(1,ind:ind+1),...
+            pos(2,ind:ind+1),...
+            pos(3,ind:ind+1),'-'),hold on,grid on,
         xlabel('x');
         ylabel('y');
         zlabel('z');
         view(80,-30);
         export_fig(f_trajectory, sprintf('%s/%04d.png', trajectory_path, i), '-native');
-        pause(0.01);
-        
+        pause(0.01);    
     %     waitforbuttonpress;
     end
-    % pos';
     save trajectory_iphone7.mat pos
 end
 
