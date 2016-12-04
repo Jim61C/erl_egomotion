@@ -4,3 +4,4 @@
 Data/Video/
 Data/Sample/*
 !Data/Sample/Intrinsics/
+*/**/*.m~

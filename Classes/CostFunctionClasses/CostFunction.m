@@ -91,6 +91,7 @@ classdef CostFunction
             t0 = CTimeleft(length(x(:)));
             for i = 1:length(x(:))
                 if c.verbose; t0.timeleft(); end;
+                % TODO: consider negative direction as well!
                 zval = sqrt(1 - (x(i)^2 + y(i)^2));
                 if ~isreal(zval); zval = 0; end;
                 T = [x(i); y(i); zval];
@@ -118,7 +119,12 @@ classdef CostFunction
             r = linspace(0,1,nsamples);
             [TH,R] = meshgrid(theta,r);
             [x,y] = pol2cart(TH,R);
+            % TODO: how to get actual T, the length of movement from
+            % direction
             translations = unique([x(:) y(:) sqrt(abs(1 - (x(:).^2 + y(:).^2)))],'rows')';
+%             TODO: fix no negative issues together!
+%             translations_back = unique([x(:) y(:) -sqrt(abs(1 - (x(:).^2 + y(:).^2)))],'rows')';
+%             translations = [translations,translations_back];
             % Build error matrix
             E = zeros(c.flow.nPoints,length(translations));
             for j = 1:length(translations)
@@ -138,7 +144,12 @@ classdef CostFunction
             r = linspace(0,1,nsamples);
             [TH,R] = meshgrid(theta,r);
             [x,y] = pol2cart(TH,R);
+            
             translations = unique([x(:) y(:) sqrt(abs(1 - (x(:).^2 + y(:).^2)))],'rows')';
+%             TODO: fix no negative issues together!
+%             translations_back = unique([x(:) y(:) -sqrt(abs(1 - (x(:).^2 + y(:).^2)))],'rows')';
+%             translations = [translations,translations_back];
+            
             % Build error matrix
             E = zeros(c.flow.nPoints,length(translations));
             for j = 1:length(translations)
