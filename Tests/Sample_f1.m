@@ -1,10 +1,11 @@
+% Start ERL and record Output
 test_name = 'f1';
 frame_info = importdata('Data/Sample/Input/f1/rgb.txt', ' ');
-input_path = 'Data/Sample/Input/f1/rgb';
+input_path = 'Data/Sample/Input/f1'; % the overall dir containing rgb.txt and rgb/ actual image folder
 load('Data/Sample/Intrinsics/f1_intrinsic.mat');
 
 Sample_TestDriver(test_name, input_path,frame_info, ...
-    K, 1, 200, 2, NaN);
+    K, 1, 200, 2);
 
 
 %% now load the result and output for visualiser in C++
@@ -25,11 +26,12 @@ end
 data_to_write = [(0:N-1)', Rt];
 csvwrite('Data/Sample/Output/f1/ERL_frames.csv',data_to_write);
 
+
 %% Write to Video
 result_save_path = createFolderIfNotExist(sprintf('Data/Sample/Output/%s', test_name));
 flow_path = createFolderIfNotExist(sprintf('%s/%s_flow', result_save_path, test_name));
 residual_path = createFolderIfNotExist(sprintf('%s/%s_residual', result_save_path, test_name));
 trajectory_path = createFolderIfNotExist(sprintf('%s/%s_trajectory', result_save_path, test_name));
 
-out_path = 'Data/Video/f1.avi';
+out_path = 'Data/Video/f1.mp4';
 videoGen(flow_path, residual_path, trajectory_path, 1, 200, 2, out_path, 2);

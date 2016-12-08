@@ -1,5 +1,5 @@
 % Example of how the classes typically work
-ld = load('Data/Sample/TUM1.mat');
+ld = load('Data/Sample/Intrinsics/TUM1.mat');
 sequence_input = 'Data/Sample/rgbd_dataset_freiburg1_desk2_secret/';
 sequence_name = 'rgbd_dataset_freiburg1_desk2_secret';
 createFolderIfNotExist(strcat('Data/Sample/', sequence_name, '_flow'));

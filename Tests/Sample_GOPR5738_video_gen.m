@@ -1,14 +1,14 @@
 % Example of how the classes typically work
-v = VideoWriter('Data/Video/GOPR5738.avi');
+v = VideoWriter('Data/Video/GOPR5738_Hopping.avi');
 v.FrameRate = 2;
 open(v);
 standard_size = nan;
 f = figure('units','pixels','position',[0 0 800 4000]);
-for i = 3: 520
+for i = 41: 100
     fprintf('producing frame:%d\n', i);
-    im1 = imread(sprintf('Data/Sample/GOPR5738_flow/%04d.png', i));
-    im2 = imread(sprintf('Data/Sample/GOPR5738_residual/%04d.png', i));
-    im3 = imread(sprintf('Data/Sample/GOPR5738_trajectory/%04d.png', i));
+    im1 = imread(sprintf('Data/Sample/Output/GOPR5738_rgb_flow/%04d.png', i));
+    im2 = imread(sprintf('Data/Sample/Output/GOPR5738_rgb_residual/%04d.png', i));
+    im3 = imread(sprintf('Data/Sample/Output/GOPR5738_rgb_trajectory/%04d.png', i));
     figure(f),
     subplot(2,2, [1 2]);
     image(im1);

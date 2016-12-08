@@ -1,10 +1,10 @@
 function Sample_GOPR5738()
     close all;clc;clear
     % Example of how the classes typically work
-    test_name = 'iphone7';
-    input_path = sprintf('Data/Sample/Input/%s_rgb', test_name);
+    test_name = 'GOPR5738_rgb';
+    input_path = sprintf('Data/Sample/Input/%s', test_name);
     
-    load('cameraParams_iphone7.mat');
+    load('cameraParams.mat');
     ld.K = cameraParams.IntrinsicMatrix';
     flow_path = createFolderIfNotExist(sprintf('Data/Sample/Output/%s_flow', test_name));
     residual_path = createFolderIfNotExist(sprintf('Data/Sample/Output/%s_residual', test_name));
@@ -15,13 +15,14 @@ function Sample_GOPR5738()
     
     
     start_frame_index = 40;
-    final_frame_index = 100;
+    final_frame_index = 520;
+    step = 1;
     guessedTs = zeros(3, final_frame_index - start_frame_index);
     guessedOmegas = zeros(3, final_frame_index - start_frame_index);
     pos = zeros(3, final_frame_index - start_frame_index);
 
-    for i = start_frame_index+1:10: final_frame_index
-        Im1 = imread(sprintf('%s/%04d.png', input_path, i-10));
+    for i = start_frame_index+step:step: final_frame_index
+        Im1 = imread(sprintf('%s/%04d.png', input_path, i-step));
         Im2 = imread(sprintf('%s/%04d.png', input_path, i));
         fprintf(sprintf('cur: %s/%04d.png\n', input_path, i));
         
@@ -66,8 +67,9 @@ function Sample_GOPR5738()
             Omega_final=[0;0;0];
         end
         R=estimateR(Omega_final);
-        current_pos=R*pos(:,i - start_frame_index)+c.guessedTranslation;
-        pos(:,i - start_frame_index+1)=current_pos;
+        ind=(i - start_frame_index)/step;
+        current_pos= inv(R) * (pos(:,ind) - c.guessedTranslation);
+        pos(:,ind+1)=current_pos;
         
         guessedTs(:,i- start_frame_index) = c.guessedTranslation;
         guessedOmegas(:,i - start_frame_index) = c.guessedOmega;
